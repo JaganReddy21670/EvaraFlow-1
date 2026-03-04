@@ -36,4 +36,8 @@ echo "sudo systemctl daemon-reload"
 echo "sudo systemctl enable retrofit-capture.service"
 echo "sudo systemctl start retrofit-capture.service"
 
+echo ""
+echo "[Optional] To enable automatic OTA updates every 30 minutes, run:"
+echo "(crontab -l 2>/dev/null; echo \"*/30 * * * * cd $CURRENT_DIR && ./update.sh >> update.log 2>&1\") | crontab -"
+
 echo "Installation script completed!"
