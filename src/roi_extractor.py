@@ -83,12 +83,13 @@ def extract_roi(image, cached_pts=None):
             c, i, _ = _aruco.detectMarkers(gray, aruco_dict, parameters=parameters)
             
             # Check if we found all 4 required markers
-            if i is not None and len(i) >= 4:
-                found_ids = set(i.flatten())
-                if all(req_id in found_ids for req_id in [0, 1, 2, 3]):
+                    logging.info(f"   -> [Step 2.2] ArUco detection SUCCESS (Profile {attempt})")
                     corners, ids = c, i
-                    logging.debug(f"ArUco detection succeeded on attempt {attempt}")
                     break
+                else:
+                    logging.info(f"   -> [Step 2.1] ArUco Profile {attempt} failed (found {len(i) if i is not None else 0}/4 markers)")
+            else:
+                logging.info(f"   -> [Step 2.1] ArUco Profile {attempt} failed (no markers found)")
                     
         # Free grayscale immediately
         del gray

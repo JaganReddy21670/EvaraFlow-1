@@ -163,9 +163,11 @@ def capture_image(max_retries=2):
 
     for attempt in range(max_retries):
         try:
+            logging.info(f"   -> [Step 1.1] LED ON (Pin {_LED_PIN})")
             _led_on()
             time.sleep(_WARMUP_DELAY)
 
+            logging.info(f"   -> [Step 1.2] Initializing Camera (Attempt {attempt + 1})")
             if USE_PICAMERA2:
                 image = _capture_with_picamera2()
             else:
@@ -174,10 +176,12 @@ def capture_image(max_retries=2):
             if image is None or image.size == 0:
                 raise ValueError("Captured image is None or empty")
 
+            logging.info(f"   -> [Step 1.3] Capture successful ({image.shape[1]}x{image.shape[0]} px)")
             time.sleep(_POST_CAPTURE_DELAY)
+            
+            logging.info("   -> [Step 1.4] LED OFF")
             _led_off()
 
-            logging.debug(f"Image captured: {image.shape[1]}x{image.shape[0]} px")
             return image
 
         except Exception as e:
