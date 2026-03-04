@@ -85,18 +85,27 @@ def _capture_with_picamera2():
     """Capture image using picamera2 — direct numpy array, no JPEG round-trip."""
     picam2 = Picamera2()
     try:
-        capture_config = picam2.create_still_configuration(
-            main={"size": _RESOLUTION, "format": "RGB888"}
-        )
-        picam2.configure(capture_config)
-
+        # Build transform for rotation
+        transform = None
         if _ROTATION in [90, 180, 270]:
             try:
                 from libcamera import Transform
                 if _ROTATION == 180:
-                    picam2.set_controls({"Transform": Transform(hflip=True, vflip=True)})
+                    transform = Transform(hflip=True, vflip=True)
+                elif _ROTATION == 90:
+                    transform = Transform(hflip=False, vflip=True, transpose=True)
+                elif _ROTATION == 270:
+                    transform = Transform(hflip=True, vflip=False, transpose=True)
             except ImportError:
-                pass
+                logging.warning("libcamera.Transform not available — rotation skipped")
+
+        # Pass transform during configuration (NOT after via set_controls)
+        config_kwargs = {"main": {"size": _RESOLUTION, "format": "RGB888"}}
+        if transform is not None:
+            config_kwargs["transform"] = transform
+
+        capture_config = picam2.create_still_configuration(**config_kwargs)
+        picam2.configure(capture_config)
 
         picam2.start()
         time.sleep(2)  # Auto-exposure warmup

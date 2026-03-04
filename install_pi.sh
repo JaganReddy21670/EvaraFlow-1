@@ -16,7 +16,7 @@ if [ ! -d "venv" ]; then
     python3 -m venv venv
 fi
 source venv/bin/activate
-pip install -r requirements.txt
+pip install --no-cache-dir -r requirements.txt
 deactivate
 
 echo "[3/4] Google Drive (rclone) setup..."
@@ -27,11 +27,16 @@ echo "[4/4] Final Setup..."
 echo "Please ensure you have placed 'credentials_store.csv' and 'config_WM.py' in this directory."
 echo "Then, you can install the systemd service by running:"
 
-# Update service file exactly to the cloned working directory
+# Create a modified copy of the service file (do NOT modify the git-tracked original)
 CURRENT_DIR=$(pwd)
-sed -i "s|/opt/retrofit/Ph-03-main|$CURRENT_DIR|g" retrofit-capture.service
+CURRENT_USER=$(whoami)
+cp retrofit-capture.service /tmp/retrofit-capture.service
+sed -i "s|/opt/retrofit/Ph-03-main|$CURRENT_DIR|g" /tmp/retrofit-capture.service
+sed -i "s|User=pi|User=$CURRENT_USER|g" /tmp/retrofit-capture.service
 
-echo "sudo cp retrofit-capture.service /etc/systemd/system/"
+echo ""
+echo "To install and start the service, run these commands:"
+echo "sudo cp /tmp/retrofit-capture.service /etc/systemd/system/"
 echo "sudo systemctl daemon-reload"
 echo "sudo systemctl enable retrofit-capture.service"
 echo "sudo systemctl start retrofit-capture.service"

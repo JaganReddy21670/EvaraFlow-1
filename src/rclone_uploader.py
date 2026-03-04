@@ -7,6 +7,7 @@ lightweight verification via exit code (no folder listing).
 """
 
 import subprocess
+import shutil
 import logging
 import os
 import time
@@ -37,12 +38,8 @@ class RcloneUploader:
     def _validate_setup(self):
         """Verify rclone is installed and remote is configured."""
         try:
-            result = subprocess.run(
-                ['which', 'rclone'],
-                capture_output=True,
-                timeout=5
-            )
-            if result.returncode != 0:
+            rclone_path = shutil.which('rclone')
+            if rclone_path is None:
                 logger.error("rclone not installed. Run: curl https://rclone.org/install.sh | sudo bash")
                 return False
 
