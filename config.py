@@ -48,7 +48,7 @@ ROI_PADDING = {
     "top": 0,    # Shrink top 
     "bottom": 0, # Shrink bottom 
     "left": 6,  
-    "right": -6  
+    "right": 6  
 }
 
 
