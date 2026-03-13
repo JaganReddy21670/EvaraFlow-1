@@ -13,7 +13,7 @@ Pipeline per cycle:
        field1=0  →  No ArUco detected, full image uploaded
        field1=2  →  Error (capture fail, upload fail, any error)
 
-Repository: https://github.com/aditya08deole/Retro-EvaraFlow.git
+Repository: https://github.com/JaganReddy21670/EvaraFlow-1.git
 """
 
 import os
