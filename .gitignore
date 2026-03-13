@@ -40,7 +40,7 @@ sheets/
 data/raw_images/
 
 # Credentials (keep template, ignore actual)
-credentials_store.csv
+# credentials_store.csv (Removed from ignore as per user request to allow pushing to cloud)
 service_account.json
 .credentials_local.xlsx
 rclone.conf
