@@ -6,6 +6,8 @@ After=network.target
 Type=simple
 User=pi
 WorkingDirectory=/opt/retrofit/Ph-03-main
+# Ensure WiFi never sleeps to prevent drops on Pi Zero W
+ExecStartPre=+/sbin/iwconfig wlan0 power off
 ExecStart=/opt/retrofit/Ph-03-main/venv/bin/python main_service.py
 Restart=always
 RestartSec=10

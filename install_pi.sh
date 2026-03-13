@@ -8,7 +8,7 @@ echo "==========================================="
 
 echo "[1/4] Updating apt and installing system dependencies..."
 sudo apt-get update
-sudo apt-get install -y python3-pip python3-venv python3-numpy python3-opencv libatlas-base-dev rclone libglib2.0-0
+sudo apt-get install -y python3-pip python3-venv python3-numpy python3-opencv libatlas-base-dev rclone libglib2.0-0 wireless-tools
 
 echo "[2/4] Setting up Python dependencies..."
 # Utilizing a virtual environment to avoid --break-system-packages overrides
@@ -22,6 +22,14 @@ deactivate
 echo "[3/4] Google Drive (rclone) setup..."
 echo "You must configure rclone to connect to Google Drive."
 echo "Run: 'rclone config' and create a remote named 'gdrive'."
+
+echo "[3.5/4] System Stability & WiFi Optimizations..."
+echo "Expanding RAM swap to 512MB and disabling WiFi sleep..."
+sudo dphys-swapfile swapoff || true
+sudo sed -i 's/^#*CONF_SWAPSIZE=.*/CONF_SWAPSIZE=512/' /etc/dphys-swapfile || true
+sudo dphys-swapfile setup || true
+sudo dphys-swapfile swapon || true
+sudo iwconfig wlan0 power off || true
 
 echo "[4/4] Final Setup..."
 echo "Please ensure you have placed 'credentials_store.csv' and 'config_WM.py' in this directory."
